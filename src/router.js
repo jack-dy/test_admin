@@ -21,6 +21,29 @@ export const asyncRouterMap =[
     ]
   },
   {
+    path:'/table',
+    name:'table',
+    meta: { title: '表格管理', icon: 'fa fa-table' },
+    component:Layout,
+    hidden:true,
+    redirect:'/inLineTable',
+    
+    children:[
+      {
+        path:'/inLineTable',
+        name:'inLineTable',
+        meta:{title:'表格内更改'},
+        component:()=>import('@/views/Table/inLineTable.vue')
+      },
+      {
+        path:'/complexTable',
+        name:'complexTable',
+        meta:{title:'表格内容更改'},
+        component:()=>import('@/views/Table/complexTable.vue')
+      }
+    ]
+  },
+  {
     path: '/login',
     name: 'Login',
     hidden:false,
