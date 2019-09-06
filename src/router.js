@@ -1,25 +1,58 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Vue from 'vue';
+import Router from 'vue-router';
+import Layout from './views/Layout/Index.vue';
 
-Vue.use(Router)
+Vue.use(Router);
 
-export default new Router({
-  mode: 'history',
+export const asyncRouterMap =[
+  {
+    path:'/',
+    name:'dashboard',
+    component:Layout,
+    hidden: true,
+    redirect:'/home',
+    children:[
+      {
+        path:'/home',
+        name:'home',
+        meta:{title:'首页', icon:'fa fa-home'},
+        component:()=>import('@/views/Home.vue')
+      }
+    ]
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    hidden:false,
+    meta:{title:'系统登录'},
+    component:()=>import('@/views/Login/Login.vue') 
+  },
+];
+
+const router = new Router({
+  mode: "history",
   base: process.env.BASE_URL,
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+  routes:asyncRouterMap
+});
+
+//路由卫士
+router.beforeEach((to,from,next)=>{
+  const isLogin = localStorage.tsToken?true:false;
+  if(isLogin){
+    if(to.path=='/login'){
+      next('/');
+    }else{
+      next();
     }
-  ]
-})
+  }else{
+    if(to.path=='/login'){
+      next();
+    }else{
+      next('/login');
+    }
+  }
+});
+
+
+
+export default router;
