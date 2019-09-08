@@ -23,3 +23,4 @@ export function update(data){
         data
     })
 }
+// 测试同步代码
